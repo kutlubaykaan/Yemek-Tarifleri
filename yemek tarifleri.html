@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Cards</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-base-200 p-10">
+<h1 class="text-4xl mb-8 text-center">Yemek Tarifleri</h1>
+<div id="recipes" class="grid md:grid-cols-3 gap-6"></div>
+<script>
+
+fetch("https://dummyjson.com/recipes")
+.then(res => res.json())
+.then(data => {
+
+    const recipes = data.recipes
+    const container = document.getElementById("recipes")
+
+    recipes.map(recipe => {
+
+        const tags = recipe.tags.map(tag =>
+            `<span class="badge badge-outline">${tag}</span>`
+        ).join(" ")
+
+        const card = `
+        <div class="card bg-base-100 shadow-xl">
+
+            <figure>
+                <img src="${recipe.image}" alt="${recipe.name}">
+            </figure>
+
+            <div class="card-body">
+
+                <h2 class="card-title">
+                    ${recipe.name}
+                </h2>
+
+                <div class="flex gap-2 flex-wrap">
+                    <span class="badge badge-primary">${recipe.cuisine}</span>
+                    <span class="badge badge-secondary">${recipe.difficulty}</span>
+                    <span class="badge badge-accent">${recipe.caloriesPerServing} kcal</span>
+                </div>
+
+                <div class="text-sm mt-2 space-y-1">
+                    <p>Hazırlama: ${recipe.prepTimeMinutes} dk</p>
+                    <p>Pişirme: ${recipe.cookTimeMinutes} dk</p>
+                    <p>Porsiyon: ${recipe.servings}</p>
+                </div>
+
+                <div class="mt-2">
+                    ⭐ ${recipe.rating} (${recipe.reviewCount} yorum)
+                </div>
+
+                <div class="flex gap-3 flex-wrap mt-3">
+                    ${tags}
+                </div>
+
+            </div>
+        </div>
+        `
+
+        container.innerHTML += card
+
+    })
+
+})
+
+</script>
+
+</body>
+</html>
